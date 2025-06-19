@@ -2,6 +2,72 @@
 
 set -e
 
+if [ -v KAFKA_OPTS ]; then
+  export JVMFLAGS="$KAFKA_OPTS"
+fi
+
+if [ -v ZOOKEEPER_CLIENT_PORT ]; then
+  extra=""
+  if [ -v ZOO_CFG_EXTRA ]; then
+    extra="$ZOO_CFG_EXTRA"
+  fi
+  extra+=" clientPort=$ZOOKEEPER_CLIENT_PORT"
+  export ZOO_CFG_EXTRA="$extra"
+fi
+
+if [ -v ZOOKEEPER_SECURE_CLIENT_PORT ]; then
+  extra=""
+  if [ -v ZOO_CFG_EXTRA ]; then
+    extra="$ZOO_CFG_EXTRA"
+  fi
+  extra+=" secureClientPort=$ZOOKEEPER_SECURE_CLIENT_PORT"
+  export ZOO_CFG_EXTRA="$extra"
+fi
+
+if [ -v ZOOKEEPER_TICK_TIME ]; then
+  export ZOO_TICK_TIME="$ZOOKEEPER_TICK_TIME"
+fi
+
+if [ -v ZOOKEEPER_INIT_LIMIT ]; then
+  export ZOO_INIT_LIMIT="$ZOOKEEPER_INIT_LIMIT"
+fi
+
+if [ -v ZOOKEEPER_SYNC_LIMIT ]; then
+  export ZOO_SYNC_LIMIT="$ZOOKEEPER_SYNC_LIMIT"
+fi
+
+if [ -v ZOOKEEPER_MAX_CLIENT_CNXNS ]; then
+  export ZOO_MAX_CLIENT_CNXNS="$ZOOKEEPER_MAX_CLIENT_CNXNS"
+fi
+
+if [ -v ZOOKEEPER_STANDALONE_ENABLED ]; then
+  export ZOO_STANDALONE_ENABLED="$ZOOKEEPER_STANDALONE_ENABLED"
+fi
+
+if [ -v ZOOKEEPER_ADMINSERVER_ENABLED ]; then
+  export ZOO_ADMINSERVER_ENABLED="$ZOOKEEPER_ADMINSERVER_ENABLED"
+fi
+
+if [ -v ZOOKEEPER_AUTOPURGE_PURGEINTERVAL ]; then
+  export ZOO_AUTOPURGE_PURGEINTERVAL="$ZOOKEEPER_AUTOPURGE_PURGEINTERVAL"
+fi
+
+if [ -v ZOOKEEPER_AUTOPURGE_SNAPRETAINCOUNT ]; then
+  export ZOO_AUTOPURGE_SNAPRETAINCOUNT="$ZOOKEEPER_AUTOPURGE_SNAPRETAINCOUNT"
+fi
+
+if [ -v ZOOKEEPER_4LW_COMMANDS_WHITELIST ]; then
+  export ZOO_4LW_COMMANDS_WHITELIST="$ZOOKEEPER_4LW_COMMANDS_WHITELIST"
+fi
+
+if [ -v ZOOKEEPER_SERVER_ID ]; then
+  export ZOO_MY_ID="$ZOOKEEPER_SERVER_ID"
+fi
+
+if [ -v ZOOKEEPER_SERVERS ]; then
+  export ZOO_SERVERS="$ZOOKEEPER_SERVERS"
+fi
+
 # Allow the container to be started with `--user`
 if [[ "$1" = 'zkServer.sh' && "$(id -u)" = '0' ]]; then
     chown -R zookeeper "$ZOO_DATA_DIR" "$ZOO_DATA_LOG_DIR" "$ZOO_LOG_DIR"

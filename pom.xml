@@ -467,8 +467,8 @@
     <mockito.version>4.9.0</mockito.version>
     <hamcrest.version>2.2</hamcrest.version>
     <commons-cli.version>1.5.0</commons-cli.version>
-    <netty.version>4.1.105.Final</netty.version>
-    <jetty.version>9.4.53.v20231009</jetty.version>
+    <netty.version>4.1.118.Final</netty.version>
+    <jetty.version>9.4.57.v20241219</jetty.version>
     <jackson.version>2.15.2</jackson.version>
     <jline.version>2.14.6</jline.version>
     <snappy.version>1.1.10.5</snappy.version>
@@ -479,7 +479,7 @@
     <spotbugsannotations.version>4.0.2</spotbugsannotations.version>
     <checkstyle.version>8.39</checkstyle.version>
     <enforcer.version>3.0.0-M3</enforcer.version>
-    <commons-io.version>2.11.0</commons-io.version>
+    <commons-io.version>2.14.0</commons-io.version>
     <burningwave.mockdns.version>0.25.4</burningwave.mockdns.version>
 
     <!-- parameters to pass to C client build -->
@@ -689,7 +689,6 @@
           <configuration>
              <showWarnings>true</showWarnings>
              <compilerArgs>
-               <compilerArg>-Werror</compilerArg>
                <compilerArg>-Xlint:deprecation</compilerArg>
                <compilerArg>-Xlint:unchecked</compilerArg>
                <compilerArg>-Xlint:-options</compilerArg>

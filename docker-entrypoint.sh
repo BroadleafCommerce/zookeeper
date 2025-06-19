@@ -2,8 +2,22 @@
 
 set -e
 
+if [ -v KAFKA_HEAP_OPTS ]; then
+  extra=""
+    if [ -v JVMFLAGS ]; then
+      extra="$JVMFLAGS"
+    fi
+    extra+=" $KAFKA_HEAP_OPTS"
+  export JVMFLAGS="$extra"
+fi
+
 if [ -v KAFKA_OPTS ]; then
-  export JVMFLAGS="$KAFKA_OPTS"
+  extra=""
+    if [ -v JVMFLAGS ]; then
+      extra="$JVMFLAGS"
+    fi
+    extra+=" $KAFKA_OPTS"
+  export JVMFLAGS="$extra"
 fi
 
 if [ -v ZOOKEEPER_CLIENT_PORT ]; then

@@ -1,0 +1,1 @@
+exec /docker-entrypoint.sh "zkServer.sh" "start-foreground"

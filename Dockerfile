@@ -55,5 +55,10 @@ ENV PATH=$PATH:/$DISTRO_NAME/bin \
     ZOOCFGDIR=$ZOO_CONF_DIR
 
 COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["zkServer.sh", "start-foreground"]
+
+RUN mkdir /etc/confluent
+RUN mkdir /etc/confluent/docker
+COPY run.sh /etc/confluent/docker/run
+RUN chmod 755 /etc/confluent/docker/run
+
+CMD ["/etc/confluent/docker/run"]

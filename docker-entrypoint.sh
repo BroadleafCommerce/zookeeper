@@ -38,49 +38,38 @@ if [ -v ZOOKEEPER_SECURE_CLIENT_PORT ]; then
   export ZOO_CFG_EXTRA="$extra"
 fi
 
-if [ -v ZOOKEEPER_TICK_TIME ]; then
-  export ZOO_TICK_TIME="$ZOOKEEPER_TICK_TIME"
-fi
+EXCLUDE_VARS=(
+  "ZOOKEEPER_CLIENT_PORT"
+  "ZOOKEEPER_SECURE_CLIENT_PORT"
+)
 
-if [ -v ZOOKEEPER_INIT_LIMIT ]; then
-  export ZOO_INIT_LIMIT="$ZOOKEEPER_INIT_LIMIT"
-fi
+for VAR in $(env)
+do
+  # Extract the variable name (without the value)
+  VAR_NAME=$(echo "$VAR" | cut -d= -f1)
 
-if [ -v ZOOKEEPER_SYNC_LIMIT ]; then
-  export ZOO_SYNC_LIMIT="$ZOOKEEPER_SYNC_LIMIT"
-fi
+  # Check if variable starts with KAFKA_ and is not in the exclude list
+  if [[ $VAR_NAME =~ ^ZOOKEEPER_ ]]; then
+    # Check if the variable is in the exclude list
+    EXCLUDED=false
+    for EXCLUDE in "${EXCLUDE_VARS[@]}"; do
+      if [[ $VAR_NAME == "$EXCLUDE" ]]; then
+        EXCLUDED=true
+        break
+      fi
+    done
 
-if [ -v ZOOKEEPER_MAX_CLIENT_CNXNS ]; then
-  export ZOO_MAX_CLIENT_CNXNS="$ZOOKEEPER_MAX_CLIENT_CNXNS"
-fi
+    # Process only if not excluded
+    if [[ $EXCLUDED == false ]]; then
+      KEY_PART=$(echo "$VAR" | sed -r 's/ZOOKEEPER_([^=]*)=.*/\1/g' | sed -r 's/\.\.+/_/g')
+      KAFKA_PROP_KEY="ZOO_$KEY_PART"
 
-if [ -v ZOOKEEPER_STANDALONE_ENABLED ]; then
-  export ZOO_STANDALONE_ENABLED="$ZOOKEEPER_STANDALONE_ENABLED"
-fi
-
-if [ -v ZOOKEEPER_ADMINSERVER_ENABLED ]; then
-  export ZOO_ADMINSERVER_ENABLED="$ZOOKEEPER_ADMINSERVER_ENABLED"
-fi
-
-if [ -v ZOOKEEPER_AUTOPURGE_PURGEINTERVAL ]; then
-  export ZOO_AUTOPURGE_PURGEINTERVAL="$ZOOKEEPER_AUTOPURGE_PURGEINTERVAL"
-fi
-
-if [ -v ZOOKEEPER_AUTOPURGE_SNAPRETAINCOUNT ]; then
-  export ZOO_AUTOPURGE_SNAPRETAINCOUNT="$ZOOKEEPER_AUTOPURGE_SNAPRETAINCOUNT"
-fi
-
-if [ -v ZOOKEEPER_4LW_COMMANDS_WHITELIST ]; then
-  export ZOO_4LW_COMMANDS_WHITELIST="$ZOOKEEPER_4LW_COMMANDS_WHITELIST"
-fi
-
-if [ -v ZOOKEEPER_SERVER_ID ]; then
-  export ZOO_MY_ID="$ZOOKEEPER_SERVER_ID"
-fi
-
-if [ -v ZOOKEEPER_SERVERS ]; then
-  export ZOO_SERVERS="$ZOOKEEPER_SERVERS"
-fi
+      # Extract the value
+      KAFKA_PROP_VALUE=$(echo "$VAR" | sed -r 's/ZOOKEEPER_[^=]*=(.*)/\1/g')
+      declare -x "$KAFKA_PROP_KEY"="$KAFKA_PROP_VALUE"
+    fi
+  fi
+done
 
 # Allow the container to be started with `--user`
 if [[ "$1" = 'zkServer.sh' && "$(id -u)" = '0' ]]; then

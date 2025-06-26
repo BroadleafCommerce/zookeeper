@@ -41,6 +41,7 @@ fi
 EXCLUDE_VARS=(
   "ZOOKEEPER_CLIENT_PORT"
   "ZOOKEEPER_SECURE_CLIENT_PORT"
+  "ZOOKEEPER_SERVERS"
 )
 
 for VAR in $(env)
@@ -91,16 +92,28 @@ if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
         echo "autopurge.snapRetainCount=$ZOO_AUTOPURGE_SNAPRETAINCOUNT"
         echo "autopurge.purgeInterval=$ZOO_AUTOPURGE_PURGEINTERVAL"
         echo "maxClientCnxns=$ZOO_MAX_CLIENT_CNXNS"
-        echo "standaloneEnabled=$ZOO_STANDALONE_ENABLED"
-        echo "admin.enableServer=$ZOO_ADMINSERVER_ENABLED"
     } >> "$CONFIG"
-    if [[ -z $ZOO_SERVERS ]]; then
-      ZOO_SERVERS="server.1=localhost:2888:3888;2181"
-    fi
+    
+    if [[ -n "$ZOOKEEPER_SERVERS" ]]; then
+      # Handle Confluent ZOOKEEPER_SERVERS ENV syntax if present
+      # Normalize delimiters: replace all semicolons and spaces with a newline
+      SERVERS=$(echo "$ZOOKEEPER_SERVERS" | tr '; ' '\n' | grep -v '^$')
 
-    for server in $ZOO_SERVERS; do
-        echo "$server" >> "$CONFIG"
-    done
+      INDEX=1
+      while IFS= read -r SERVER; do
+        echo "server.${INDEX}=${SERVER}" >> "$CONFIG"
+        ((INDEX++))
+      done <<< "$SERVERS"
+    else 
+      # Handle default ZOO_SERVERS ENV syntax
+      if [[ -z $ZOO_SERVERS ]]; then
+        ZOO_SERVERS="server.1=localhost:2888:3888;2181"
+      fi
+
+      for server in $ZOO_SERVERS; do
+          echo "$server" >> "$CONFIG"
+      done    
+    fi
 
     if [[ -n $ZOO_4LW_COMMANDS_WHITELIST ]]; then
         echo "4lw.commands.whitelist=$ZOO_4LW_COMMANDS_WHITELIST" >> "$CONFIG"

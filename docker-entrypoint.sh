@@ -126,7 +126,14 @@ fi
 
 # Write myid only if it doesn't exist
 if [[ ! -f "$ZOO_DATA_DIR/myid" ]]; then
-    echo "${ZOO_MY_ID:-1}" > "$ZOO_DATA_DIR/myid"
+
+    if [[ -n $ZOOKEEPER_SERVER_ID ]]; then
+        # Handle Confluent ZOOKEEPER_SERVER_ID ENV syntax if present
+        echo "${ZOOKEEPER_SERVER_ID:-1}" > "$ZOO_DATA_DIR/myid"  
+    else
+        echo "${ZOO_MY_ID:-1}" > "$ZOO_DATA_DIR/myid"        
+    fi    
+
 fi
 
 exec "$@"

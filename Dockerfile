@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.8_9-jre-alpine-3.22
+FROM eclipse-temurin:21.0.9_10-jre-alpine-3.23
 
 USER root
 

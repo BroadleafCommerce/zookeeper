@@ -20,9 +20,17 @@ RUN set -eux; \
     chown -R appuser:root "$ZOO_DATA_LOG_DIR" "$ZOO_DATA_DIR" "$ZOO_CONF_DIR" "$ZOO_LOG_DIR"; \
     chmod -R ug+w "$ZOO_DATA_LOG_DIR" "$ZOO_DATA_DIR" "$ZOO_CONF_DIR" "$ZOO_LOG_DIR"
 
-# Install required packges
+# Install required packages with Edge updates for CVE patching
 RUN set -eux; \
+    # 1. Add Alpine Edge repositories (Main and Community)
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+    # 2. Update index and upgrade apk-tools first
     apk update; \
+    apk add --upgrade apk-tools; \
+    # 3. Force upgrade all installed packages (including base OS libs) to Edge versions
+    apk upgrade --available; \
+    # 4. Install specific dependencies (now pulling latest versions from Edge)
     apk add --no-cache \
         ca-certificates \
         su-exec \
@@ -30,8 +38,9 @@ RUN set -eux; \
         netcat-openbsd \
         bash \
         wget; \
+    # 5. Clean up
     rm -rf /var/cache/apk/*; \
-# Verify that su-exec binary works
+    # Verify that su-exec binary works
     su-exec nobody true
 
 ARG SHORT_DISTRO_NAME=zookeeper-3.8.4

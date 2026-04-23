@@ -3,6 +3,11 @@
 # The fully qualified image tag (including any registry prefix) to use for the main image.
 variable "FULLY_QUALIFIED_MAIN_IMAGE_TAG" {}
 
+# The base image to use for the main image.
+variable "BASE_IMAGE" {
+  default = "repository.broadleafcommerce.com:5001/broadleaf/zookeeper-base:wolfi-1"
+}
+
 # Whether or not to only build images for the architecture of the machine that is running the
 # build process (instead of multi-platform images). This will also force the image output type to
 # 'docker', which will load the image to the local registry.
@@ -51,5 +56,8 @@ target "main_image" {
   dockerfile = "Dockerfile"
   platforms = get_target_platforms()
   tags = [ "${FULLY_QUALIFIED_MAIN_IMAGE_TAG}" ]
+  args = {
+    BASE_IMAGE = "${BASE_IMAGE}"
+  }
   output = get_output_config()
 }

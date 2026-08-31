@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=repository.broadleafcommerce.com:5001/broadleaf/zookeeper-base:wolfi-5
+ARG BASE_IMAGE=repository.broadleafcommerce.com:5001/broadleaf/zookeeper-base:wolfi-7
 FROM ${BASE_IMAGE}
 
 USER root

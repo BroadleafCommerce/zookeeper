@@ -4,8 +4,8 @@
 - Use JDK 17
 - `export JAVA_HOME=$(/usr/libexec/java_home)`
 - `mvn clean install -DskipTests` (Including tests is optional and expensive)
-- For local testing: `FULLY_QUALIFIED_MAIN_IMAGE_TAG=repository.broadleafcommerce.com:5001/broadleaf/zookeeper:3.8.6-wolfi-6 BUILD_AND_LOAD_LOCAL_PLATFORM_ONLY=true docker buildx bake -f docker-bake.hcl`
-- For release: `FULLY_QUALIFIED_MAIN_IMAGE_TAG=repository.broadleafcommerce.com:5001/broadleaf/zookeeper:3.8.6-wolfi-6 docker buildx bake --builder blc-devops-multiplatform-builder -f docker-bake.hcl --push` (Increment the `r1` to a higher value if only changing java or os deps without changing app, jre, or os versions).
+- For local testing: `FULLY_QUALIFIED_MAIN_IMAGE_TAG=repository.broadleafcommerce.com:5001/broadleaf/zookeeper:3.8.6-wolfi-7 BUILD_AND_LOAD_LOCAL_PLATFORM_ONLY=true docker buildx bake -f docker-bake.hcl`
+- For release: `FULLY_QUALIFIED_MAIN_IMAGE_TAG=repository.broadleafcommerce.com:5001/broadleaf/zookeeper:3.8.6-wolfi-7 docker buildx bake --builder blc-devops-multiplatform-builder -f docker-bake.hcl --push` (Increment the `r1` to a higher value if only changing java or os deps without changing app, jre, or os versions).
 
 ## Update Notes & Considerations
 

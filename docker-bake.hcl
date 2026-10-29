@@ -5,7 +5,7 @@ variable "FULLY_QUALIFIED_MAIN_IMAGE_TAG" {}
 
 # The base image to use for the main image.
 variable "BASE_IMAGE" {
-  default = "repository.broadleafcommerce.com:5001/broadleaf/zookeeper-base:wolfi-9"
+  default = "repository.broadleafcommerce.com:5001/broadleaf/zookeeper-base:wolfi-10"
 }
 
 # Whether or not to only build images for the architecture of the machine that is running the
